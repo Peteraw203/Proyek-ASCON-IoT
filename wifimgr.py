@@ -46,32 +46,39 @@ def do_connect():
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     
+    wlan.disconnect() 
+    time.sleep(1) 
+
     if not CONFIG_FILE in uos.listdir():
         print("! Config WiFi tidak ditemukan.")
         return False
     
-    f = open(CONFIG_FILE, 'r')
-    wifi_data = f.read().split('\n')
-    f.close()
+    try:
+        f = open(CONFIG_FILE, 'r')
+        wifi_data = f.read().split('\n')
+        f.close()
+    except:
+        return False
     
     if len(wifi_data) < 2: return False
 
-    # .strip() disini SUDAH BENAR (membersihkan saat membaca)
     ssid = wifi_data[0].strip()
     password = wifi_data[1].strip()
     
     print(f"Mencoba connect ke: '{ssid}'...")
-    wlan.connect(ssid, password)
     
-    # Tunggu koneksi (Maksimal 10 detik)
-    for i in range(20): 
+    wlan.connect(ssid, password)
+    max_wait = 15
+    while max_wait > 0:
         if wlan.isconnected():
-            print(f"Terhubung! IP: {wlan.ifconfig()[0]}")
+            print(f"\nTerhubung! IP: {wlan.ifconfig()[0]}")
             return True
-        time.sleep(0.5)
+        status = wlan.status()
+        time.sleep(1)
+        max_wait -= 1
         print(".", end="")
     
-    print("\nGagal connect (Timeout/Password Salah).")
+    print("\nGagal connect (Timeout).")
     return False
 
 def start_ap():
@@ -111,6 +118,9 @@ def start_ap():
                     ssid_start = req.find('ssid=')
                     pass_start = req.find('password=')
                     
+                    # --- LOGIKA ROUTING ---
+
+                    # 1. Jika tombol Save ditekan
                     if ssid_start > 0 and pass_start > 0:
                         end_ssid = req.find('&', ssid_start)
                         if end_ssid == -1: end_ssid = len(req)
@@ -120,8 +130,6 @@ def start_ap():
                         if end_pass == -1: end_pass = len(req)
                         raw_pass = req[pass_start+9 : end_pass]
                         
-                        # --- PERBAIKAN UTAMA DISINI ---
-                        # Tambahkan .strip() agar spasi di awal/akhir input browser DIBUANG
                         ssid_val = unquote(raw_ssid).strip()
                         pass_val = unquote(raw_pass).strip()
                         
@@ -134,17 +142,35 @@ def start_ap():
                         conn.close()
                         time.sleep(2)
                         machine.reset()
+
+                    elif 'GET /marin.jpg' in req:
+                        try:
+                            conn.send('HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\n\r\n')
+                            # Baca file per 1KB biar RAM aman
+                            with open('marin.jpg', 'rb') as img_f:
+                                while True:
+                                    chunk = img_f.read(1024)
+                                    if not chunk: break
+                                    conn.send(chunk)
+                        except Exception as e:
+                            print("Gagal kirim gambar:", e)
+                        conn.close()
+
                     else:
                         html = """HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n
                         <!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-                        <style>body{font-family:sans-serif;text-align:center;padding:20px}input{padding:10px;width:90%;margin:5px}</style>
+                        <style>body{font-family:sans-serif;text-align:center;padding:20px}input{padding:10px;width:90%;margin:5px}
+                        img{max-width:100%;margin-top:20px}</style>
                         </head><body><h2>WiFi Setup</h2><form action="/" method="POST">
                         <input type="text" name="ssid" placeholder="SSID" required><br>
                         <input type="text" name="password" placeholder="Password"><br>
-                        <input type="submit" value="Save"></form></body></html>"""
+                        <input type="submit" value="Save"></form>
+                        <img src="marin.jpg" alt="Gambar"></body></html>"""
                         conn.send(html)
                         conn.close()
-                except:
+
+                except Exception as e:
+                    print("Error socket:", e)
                     try: conn.close()
                     except: pass
         gc.collect()
