@@ -1,55 +1,27 @@
-import { DOCS_LINK, SUPPORT_LINK } from 'config/constant';
-import { ConfigContext } from 'contexts/ConfigContext';
-import { useContext } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import React from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
 
-// -----------------------|| NAV BAR ||-----------------------//
-
-export default function Footer() {
-  const configContext = useContext(ConfigContext);
-  const { boxLayout } = configContext.state;
-
-  let footerClass = ['footer-wrapper'];
-
-  if (boxLayout === true) {
-    footerClass = [...footerClass, 'container'];
-  } else {
-    footerClass = [...footerClass, 'container-fluid'];
-  }
-
+const Footer = () => {
   return (
-    <>
-      <footer className="pc-footer">
-        <div className={`${footerClass.join(' ')} `}>
+    <React.Fragment>
+      <footer className="footer" style={{ padding: '50px 0', background: 'transparent' }}>
+        <Container fluid>
           <Row>
-            <Col className="my-1">
-              <p className="m-0">
-                Dashboardkit &#9829; crafted by Team{' '}
-                <a href="https://themeforest.net/user/phoenixcoded" target="_blank">
-                  Phoenixcoded
-                </a>
+            {/* Copyright Kiri */}
+            <Col md={6} sm={12}>
+              <p className="mb-0 text-muted">
+                Copyright &copy; {new Date().getFullYear()} 
+                   &nbsp; 
               </p>
             </Col>
-            <Col sm="auto">
-              <ul className="list-inline footer-link mb-0">
-                <li className="list-inline-item">
-                  <a href="../index.html">Home</a>
-                </li>
-                <li className="list-inline-item">
-                  <a href={DOCS_LINK} target="_blank">
-                    Documentation
-                  </a>
-                </li>
-                <li className="list-inline-item">
-                  <a href={SUPPORT_LINK} target="_blank">
-                    Support
-                  </a>
-                </li>
-              </ul>
+            <Col md={6} sm={12} className="text-md-end">
+               {/* Area Kosong */}
             </Col>
           </Row>
-        </div>
+        </Container>
       </footer>
-    </>
+    </React.Fragment>
   );
-}
+};
+
+export default Footer;

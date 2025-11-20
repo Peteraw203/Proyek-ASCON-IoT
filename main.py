@@ -16,7 +16,7 @@ MQTT_BROKER    = "broker.hivemq.com"
 MQTT_TOPIC     = "water-ascon128"
 
 # KALIBRASI SENSOR 
-WATER_THRESHOLD = 2100 
+WATER_THRESHOLD = 2200 
 
 # Setup Sensor
 sensor_pin = ADC(Pin(34))

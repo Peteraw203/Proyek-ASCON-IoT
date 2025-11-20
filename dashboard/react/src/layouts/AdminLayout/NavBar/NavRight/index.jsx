@@ -15,101 +15,14 @@ import avatar3 from 'assets/images/user/avatar-3.jpg';
 // notifications data
 const notifications = [
   {
-    avatar: avatar2,
-    title: (
-      <>
-        Keefe Bond <span className="text-body"> added new tags to </span> 💪 Design system
-      </>
-    ),
-    messageRead: false,
-    time: '2 min ago',
-    message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-    badge: 'Dashboard'
-  },
-  {
-    icon: 'ph-duotone ph-chats-teardrop',
-    background: 'bg-light-primary',
-    title: 'Message',
-    time: '1 hour ago',
-    message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-    messageRead: true
-  },
-  {
-    icon: 'ph-duotone ph-user',
-    background: 'bg-light-danger',
-    title: 'Challenge invitation',
-    time: '12 hour ago',
-    message: 'Jonny aber invites to join the challenge',
-    messageRead: true,
-    buttons: [
-      { label: 'Decline', variant: 'btn-outline-secondary' },
-      { label: 'Accept', variant: 'btn-primary' }
-    ]
-  },
-  {
-    avatar: avatar2,
-    title: (
-      <>
-        Keefe Bond <span className="text-body"> added new tags to </span> 💪 Design system
-      </>
-    ),
-    time: '2 min ago',
-    messageRead: true,
-    message: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
-  },
-  {
-    icon: 'ph-duotone ph-shield-checkered',
-    background: 'bg-light-success',
-    title: 'Security',
-    time: '5 hour ago',
-    message:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-    messageRead: true
+  
   }
 ];
 
 // profile dropdown item
 const profile = [
   [
-    { icon: 'ph-key', label: 'Change password' },
-    {
-      icon: 'ph-envelope-simple',
-      label: 'Recently mail',
-      subAvatars: [avatar1, avatar2, avatar3]
-    },
-    { icon: 'ph-calendar-blank', label: 'Schedule meetings' }
-  ],
-  [
-    { icon: 'ph-heart', label: 'Favorite' },
-    {
-      icon: 'ph-arrow-circle-down',
-      label: 'Download',
-      badge: '10',
-      badgeClasses: 'avatar avatar-xs rounded-circle bg-danger text-white'
-    }
-  ],
-  [
-    {
-      icon: 'ph-globe-hemisphere-west',
-      label: 'Languages',
-      selectLang: ['English', 'Spain', 'Arabic']
-    },
-    { icon: 'ph-flag', label: 'Country' }
-  ],
-  [
-    { icon: 'ph-user-circle', label: 'Edit profile' },
-    {
-      icon: 'ph-star text-warning',
-      label: 'Upgrade account',
-      badge: 'NEW',
-      badgeClasses: 'badge bg-light-success border border-success ms-2'
-    },
-    { icon: 'ph-bell', label: 'Notifications' },
-    { icon: 'ph-gear-six', label: 'Settings' }
-  ],
-  [
-    { icon: 'ph-plus-circle', label: 'Add account' },
-    { icon: 'ph-power', label: 'Logout' }
+    
   ]
 ];
 
