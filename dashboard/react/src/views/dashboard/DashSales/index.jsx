@@ -5,7 +5,7 @@ import mqtt from 'mqtt';
 import { Ascon } from 'ascon-js';
 
 // --- KONFIGURASI MQTT ---
-const MQTT_BROKER = 'ws://broker.hivemq.com:8000/mqtt';
+const MQTT_BROKER = 'wss://broker.hivemq.com:8884/mqtt';
 const MQTT_TOPIC = 'water-ascon128';
 
 // --- KUNCI ASCON ---
@@ -17,11 +17,13 @@ export default function DashSales() {
   const [currentLevel, setCurrentLevel] = useState(0);
   const [rawLogs, setRawLogs] = useState([]);
   const [historyData, setHistoryData] = useState([]);
-  const terminalEndRef = useRef(null);
+  const terminalContainerRef = useRef(null);
 
   // Auto-scroll to bottom of terminal
   useEffect(() => {
-    terminalEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (terminalContainerRef.current) {
+      terminalContainerRef.current.scrollTop = terminalContainerRef.current.scrollHeight;
+    }
   }, [rawLogs]);
 
   // --- FUNGSI DEKRIPSI ---
@@ -209,17 +211,20 @@ export default function DashSales() {
                 <h5>Raw Encrypted Data Log</h5>
               </Card.Header>
               <Card.Body style={{ padding: '0' }}>
-                <div style={{
-                  backgroundColor: '#1e1e1e',
-                  color: '#00ff00',
-                  padding: '15px',
-                  fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
-                  fontSize: '0.85rem',
-                  height: '380px',
-                  overflowY: 'auto',
-                  borderBottomLeftRadius: '4px',
-                  borderBottomRightRadius: '4px'
-                }}>
+                <div
+                  ref={terminalContainerRef}
+                  style={{
+                    backgroundColor: '#1e1e1e',
+                    color: '#00ff00',
+                    padding: '15px',
+                    fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+                    fontSize: '0.85rem',
+                    height: '380px',
+                    overflowY: 'auto',
+                    borderBottomLeftRadius: '4px',
+                    borderBottomRightRadius: '4px'
+                  }}
+                >
                   {rawLogs.length === 0 && <div style={{ opacity: 0.5 }}>Waiting for data...</div>}
                   {rawLogs.map((log, index) => (
                     <div key={index} style={{ marginBottom: '5px', wordBreak: 'break-all' }}>
@@ -227,7 +232,6 @@ export default function DashSales() {
                       {log}
                     </div>
                   ))}
-                  <div ref={terminalEndRef} />
                 </div>
               </Card.Body>
             </Card>

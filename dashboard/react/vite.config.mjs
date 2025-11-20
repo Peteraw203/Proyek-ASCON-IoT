@@ -13,7 +13,7 @@ const resolvePath = (str) => path.resolve(__dirname, str);
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const API_URL = `${env.VITE_APP_BASE_NAME}`;
+  const API_URL = `${env.VITE_APP_BASE_NAME || '/'}`;
   const PORT = 3000;
 
   return {
@@ -30,7 +30,7 @@ export default defineConfig(({ mode }) => {
       // Hati-hati: 'global: window' kadang bentrok dengan nodePolyfills.
       // Jika nanti ada error "global is not defined", hapus baris ini.
       // Tapi untuk sekarang biarkan saja jika diperlukan library lain.
-      global: 'window' 
+      global: 'window'
     },
     resolve: {
       alias: [
@@ -63,7 +63,7 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         input: {
           // 3. Cukup satu entry point 'main'
-          main: resolvePath('index.html'), 
+          main: resolvePath('index.html'),
         }
       }
     },
