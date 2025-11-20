@@ -3,19 +3,25 @@ import { lazy } from 'react';
 import AdminLayout from 'layouts/AdminLayout';
 import GuestLayout from 'layouts/GuestLayout';
 
+import ProtectedRoute from 'components/ProtectedRoute';
+
 // Dashboard
 const DashboardSales = lazy(() => import('../views/dashboard/DashSales/index'));
 
 // Authentication
 const Login = lazy(() => import('../views/auth/login'));
-const Register = lazy(() => import('../views/auth/register')); // <--- TAMBAHAN 1
+const Register = lazy(() => import('../views/auth/register'));
 
 const MainRoutes = {
   path: '/',
   children: [
     {
       path: '/',
-      element: <AdminLayout />,
+      element: (
+        <ProtectedRoute>
+          <AdminLayout />
+        </ProtectedRoute>
+      ),
       children: [
         {
           path: '/dashboard/sales',
@@ -32,7 +38,7 @@ const MainRoutes = {
           element: <Login />
         },
         {
-          path: '/register',     // <--- TAMBAHAN 2: Rute untuk register
+          path: '/register',
           element: <Register />
         }
       ]

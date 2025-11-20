@@ -1,5 +1,6 @@
 // react-bootstrap
 import { ListGroup, Dropdown } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 // third party
 import SimpleBar from 'simplebar-react';
@@ -8,27 +9,34 @@ import SimpleBar from 'simplebar-react';
 import ActionItem from './ActionItem';
 
 // assets
-import avatar1 from 'assets/images/user/avatar-1.jpg';
 import avatar2 from 'assets/images/user/avatar-2.jpg';
-import avatar3 from 'assets/images/user/avatar-3.jpg';
+
+// firebase
+import { signOut } from 'firebase/auth';
+import { auth } from 'config/firebase';
+import { useAuth } from 'contexts/AuthContext';
 
 // notifications data
-const notifications = [
-  {
-
-  }
-];
+const notifications = [];
 
 // profile dropdown item
-const profile = [
-  [
-
-  ]
-];
+const profile = [];
 
 // -----------------------|| NAV RIGHT ||-----------------------//
 
 export default function NavRight() {
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/login');
+    } catch (error) {
+      console.error("Logout Error:", error);
+    }
+  };
+
   return (
     <ListGroup as="ul" bsPrefix=" " className="list-unstyled">
       <ListGroup.Item as="li" bsPrefix=" " className="pc-h-item">
@@ -36,8 +44,8 @@ export default function NavRight() {
           <Dropdown.Toggle as="a" variant="link" className="pc-head-link pc-head-link-text arrow-none me-0 user-name">
             <img src={avatar2} alt="user-image" className="user-avatar" />
             <span>
-              <span className="user-name">Sensor Gedung F</span>
-              <span className="user-desc">Monitoring</span>
+              <span className="user-name">{currentUser?.email?.split('@')[0] || 'User'}</span>
+              <span className="user-desc">Admin</span>
             </span>
           </Dropdown.Toggle>
           <Dropdown.Menu className="pc-h-dropdown dropdown-user-profile">
@@ -53,21 +61,19 @@ export default function NavRight() {
                         <img src={avatar2} alt="user" className="wid-50 rounded-circle" />
                       </div>
                       <div className="flex-grow-1 mx-3">
-                        <h5 className="mb-0">Sensor Gedung F</h5>
+                        <h5 className="mb-0">{currentUser?.email?.split('@')[0] || 'User'}</h5>
                         <a className="text-sm link-secondary" href="#">
-                          sensor.f@ascon.iot
+                          {currentUser?.email || 'No Email'}
                         </a>
                       </div>
                       <span className="badge bg-primary">ACTIVE</span>
                     </div>
                   </li>
-                  {profile.map((group, groupIdx) => (
-                    <li className="list-group-item item-actions" key={groupIdx}>
-                      {group.map((item, idx) => (
-                        <ActionItem key={idx} item={item} />
-                      ))}
-                    </li>
-                  ))}
+                  <li className="list-group-item">
+                    <button className="btn btn-danger w-100" onClick={handleLogout}>
+                      <i className="feather icon-log-out me-2" /> Logout
+                    </button>
+                  </li>
                 </ul>
               </div>
             </SimpleBar>
