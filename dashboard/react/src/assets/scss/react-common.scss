@@ -1,0 +1,117 @@
+.pc-header {
+  .show {
+    &.dropdown {
+      position: static;
+    }
+  }
+}
+.dropdowns .dropdown-item i {
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.btn-group-toggle > .btn input[type='radio'],
+.btn-group-toggle > .btn input[type='checkbox'],
+.btn-group-toggle > .btn-group > .btn input[type='radio'],
+.btn-group-toggle > .btn-group > .btn input[type='checkbox'] {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  pointer-events: none;
+}
+
+.close {
+  float: right;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  opacity: 0.5;
+}
+button.close {
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+}
+.alert-dismissible .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  padding: 0.75rem 1.25rem;
+  color: inherit;
+}
+.input-group .btn {
+  z-index: inherit;
+}
+.select__control {
+  .select__value-container {
+    &--is-multi {
+      box-sizing: border-box;
+      display: inline-block;
+      margin: 0;
+      position: relative;
+      vertical-align: middle;
+      > div {
+        overflow: initial !important;
+        width: inherit !important;
+      }
+      .select__multi-value {
+        cursor: default;
+        float: left;
+        margin-right: 5px;
+        margin-top: 5px;
+        background-color: #7267ef;
+        border: 1px solid #7267ef;
+        color: #fff;
+        border-radius: 3px;
+        padding: 2px 10px;
+        &__label {
+          cursor: pointer;
+          display: inline-block;
+          font-weight: bold;
+          color: #fff;
+          margin-right: 8px;
+        }
+        &__remove {
+          &:hover {
+            background-color: transparent;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}
+.ps-5px {
+  padding-left: 5px;
+}
+.pe-5px {
+  padding-right: 5px;
+}
+.me-5px {
+  margin-right: 5px !important;
+}
+.mt-5px {
+  margin-top: 5px !important;
+}
+.text-left {
+  text-align: left !important;
+}
+.text-right {
+  text-align: right !important;
+}
+
+.react-datepicker-popper {
+  z-index: 9999 !important;
+}
+.pc-hasmenu {
+  .pc-submenu {
+    max-height: calc(100vh - #{$header-height} - 30px);
+    overflow: hidden;
+    transition: all 0.4s ease-in-out;
+  }
+  &:not(.pc-trigger) .pc-submenu {
+    max-height: 0; /* Adjust based on content height */
+  }
+}

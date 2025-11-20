@@ -1,0 +1,487 @@
+// ============================
+//     header css start
+// ============================
+
+.pc-header {
+  background: var(--pc-header-background);
+  color: var(--pc-header-color);
+  min-height: $header-height;
+  box-shadow: var(--pc-header-shadow);
+  backdrop-filter: blur(7px);
+  position: fixed;
+  left: $sidebar-width;
+  right: 0;
+  z-index: 1025;
+
+  ul {
+    margin-bottom: 0;
+    display: inline-flex;
+  }
+
+  .header-wrapper {
+    display: flex;
+    padding: 0 25px;
+    flex-grow: 1;
+
+    @media (max-width: 575.98px) {
+      padding: 0 20px;
+    }
+  }
+
+  .pc-h-item {
+    min-height: $header-height;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .pc-head-link {
+    cursor: pointer;
+    margin: 0 4px;
+    position: relative;
+    font-weight: 500;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    color: var(--pc-header-color);
+    overflow: hidden;
+
+    &.pc-head-link-text {
+      width: auto;
+      padding: 0 16px;
+
+      @media (max-width: 575.98px) {
+        padding: 0 0.65rem;
+        width: 44px;
+      }
+    }
+
+    > i {
+      font-size: 24px;
+      color: var(--pc-header-color);
+
+      &.material-icons-two-tone {
+        font-size: 24px;
+        background-color: var(--pc-header-color);
+      }
+    }
+
+    > svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &.active,
+    &:active,
+    &:focus,
+    &:hover {
+      text-decoration: none;
+      color: var(--pc-header-color);
+      background: rgba(var(--pc-header-color-rgb), 0.09);
+
+      .hamburger {
+        .hamburger-inner {
+          background-color: var(--pc-header-color);
+
+          &::after,
+          &::before {
+            background-color: var(--pc-header-color);
+          }
+        }
+      }
+
+      &.user-name {
+        background: transparent;
+      }
+    }
+
+    .pc-h-badge {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      border-radius: 50%;
+      font-size: 9px;
+      z-index: 9;
+
+      &.dots {
+        width: 9px;
+        height: 9px;
+        top: 7px;
+        right: 16px;
+        padding: 0;
+      }
+    }
+
+    .user-desc,
+    .user-name {
+      display: block;
+      line-height: 1;
+    }
+
+    .user-name {
+      margin-bottom: 5px;
+      font: {
+        size: 15px;
+        weight: 600;
+      }
+    }
+
+    .user-desc {
+      font: {
+        size: 12px;
+        weight: 400;
+      }
+      color: var(--pc-header-color);
+    }
+  }
+
+  .pc-h-dropdown {
+    .fa-circle {
+      font-size: 5px;
+      vertical-align: middle;
+    }
+    transform: none !important;
+    top: 100% !important;
+
+    &.dropdown-menu-end {
+      right: 0 !important;
+      left: auto !important;
+    }
+  }
+
+  .pc-level-menu {
+    position: relative;
+
+    &:hover {
+      > .dropdown-menu {
+        display: block;
+        left: 100%;
+        top: -18px !important;
+      }
+    }
+  }
+
+  .pc-mega-menu {
+    position: static;
+
+    .pc-mega-dmenu {
+      transform: none !important;
+      left: 0 !important;
+      right: 0 !important;
+      top: 100% !important;
+      padding: 0;
+
+      .row.g-0 {
+        .col {
+          padding: 15px 0;
+          border-right: 1px dashed var(--bs-border-color);
+        }
+      }
+
+      .mega-title {
+        margin: 10px 25px;
+        position: relative;
+      }
+
+      .pc-mega-list {
+        display: block;
+        list-style: none;
+        padding-left: 0;
+      }
+    }
+  }
+
+  .drp-search {
+    min-width: 20rem;
+  }
+  #vertical-nav-toggle {
+    margin-left: -15px;
+  }
+
+  .user-avatar {
+    width: 40px;
+    margin-right: 10px;
+    border-radius: 50%;
+  }
+
+  .dropdown-notification {
+    min-width: 450px;
+    max-width: 100%;
+    padding: 0;
+
+    .dropdown-header,
+    .dropdown-footer {
+      padding: 16px 20px;
+    }
+
+    h6.text-truncate,
+    p > .text-truncate {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    .dropdown-header,
+    .dropdown-body {
+      border-bottom: 1px solid var(--bs-border-color);
+    }
+
+    .list-group-item-action {
+      &:active,
+      &:hover,
+      &:focus {
+        background: shift-color($primary, $soft-bg-level);
+      }
+
+      .user-avtar,
+      h6 {
+        cursor: pointer;
+      }
+    }
+
+    .badge {
+      font-size: 0.8125rem;
+      padding: 0.43em 1em;
+    }
+
+    .user-avtar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+    }
+
+    .notification-file {
+      display: flex;
+      align-items: center;
+
+      i {
+        font-size: 20px;
+        margin-right: 16px;
+      }
+    }
+
+    .card {
+      cursor: pointer;
+
+      &:hover {
+        background: var(--pc-active-background);
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      min-width: 100%;
+    }
+  }
+
+  .dropdown-user-profile {
+    min-width: 352px;
+    max-width: 100%;
+    padding: 0;
+
+    .dropdown-header,
+    .dropdown-footer {
+      padding: 16px 20px;
+    }
+
+    .dropdown-header,
+    .dropdown-body {
+      border-bottom: 1px solid var(--bs-border-color);
+    }
+    .profile-notification-scroll {
+      .list-group-item {
+        &.item-actions {
+          padding: 5px 10px;
+        }
+      }
+    }
+    .dropdown-item {
+      font-weight: 500;
+      padding: 10px 15px;
+      display: flex;
+      border-radius: var(--bs-border-radius);
+      align-items: center;
+      justify-content: space-between;
+      border: var(--bs-border-width) var(--bs-border-style) transparent;
+
+      i {
+        font-size: 24px;
+      }
+
+      .user-group {
+        .avatar,
+        img {
+          width: 30px;
+          height: 30px;
+          font-size: 14px;
+        }
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      min-width: 100%;
+    }
+  }
+}
+
+#desktop-collapse {
+  @media (max-width: 1023.99px) {
+    display: none;
+  }
+}
+#mobile-collapse {
+  @media (min-width: 1024.99px) {
+    display: none;
+  }
+}
+
+.user-group {
+  display: inline-flex;
+  align-items: center;
+
+  .avatar,
+  img {
+    cursor: pointer;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    z-index: 2;
+    transition: all 0.1s ease-in-out;
+    border: 2px solid $card-bg;
+
+    + .avatar,
+    + img {
+      margin-left: -14px;
+    }
+
+    &:hover {
+      z-index: 5;
+    }
+  }
+}
+
+.pc-mob-header {
+  display: none;
+  background: var(--pc-brand-background);
+  height: 70px;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  z-index: 1026;
+  left: 0;
+  right: 0;
+  padding: 0 10px 0 30px;
+
+  .hamburger-inner,
+  .hamburger-inner::after,
+  .hamburger-inner::before {
+    background: #fff;
+  }
+
+  .pc-head-link,
+  a {
+    color: #fff;
+  }
+}
+
+@media (max-width: 1024px) {
+  .pc-mob-header {
+    display: flex;
+  }
+
+  .pc-header {
+    top: 0;
+    left: 0;
+    transition: all 0.15s ease-in-out;
+
+    .user-avatar {
+      margin-right: 0;
+    }
+
+    .pc-head-link {
+      .user-desc,
+      .user-name {
+        display: none;
+      }
+
+      &#mobile-collapse {
+        position: absolute;
+        left: 10px;
+      }
+    }
+
+    .pcm-logo {
+      margin-left: 30px;
+
+      img {
+        max-width: 160px;
+      }
+    }
+
+    &.mob-header-active {
+      top: $header-height;
+
+      .header-wrapper {
+        background: var(--pc-header-background);
+        position: relative;
+        z-index: 5;
+      }
+    }
+
+    .pc-md-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .pc-level-menu .dropdown-menu {
+      left: 0;
+      display: block;
+      padding-left: 30px;
+    }
+
+    .pc-mega-menu .pc-mega-dmenu .row.g-0 > .col {
+      flex: 100%;
+    }
+  }
+}
+
+#pc-noti-home {
+  > .media {
+    &:hover {
+      margin: -15px;
+      padding: 15px;
+      background: rgba($primary, 0.1);
+    }
+  }
+}
+@include media-breakpoint-down(sm) {
+  .pc-header {
+    .pc-head-link {
+      padding: 0.65rem;
+      margin: 0;
+    }
+
+    .pc-h-item {
+      position: static;
+
+      .pc-h-dropdown {
+        left: 0 !important;
+        right: 0 !important;
+      }
+    }
+  }
+}
+// header css end
