@@ -49,7 +49,7 @@ export default function NavContent({ navigation, activeNav }) {
       <ListGroup variant="flush" as="ul" bsPrefix=" " className="pc-navbar">
         {navItems}
       </ListGroup>
-    
+
     </SimpleBar>
   );
 
@@ -66,8 +66,9 @@ export default function NavContent({ navigation, activeNav }) {
   const mHeader = (
     <div className={mheaderClass.join(' ')}>
       <Link to="/dashboard/sales" className="b-brand">
-        <img src={logo} alt="" className="logo logo-lg" />
-        <img src={collapseLayout ? logoSMLight : logoSM} alt="" className="logo logo-sm" />
+        {/* <img src={logo} alt="" className="logo logo-lg" /> */}
+        {/* <img src={collapseLayout ? logoSMLight : logoSM} alt="" className="logo logo-sm" /> */}
+        <span className="b-title" style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff' }}>PantauAir</span>
       </Link>
     </div>
   );

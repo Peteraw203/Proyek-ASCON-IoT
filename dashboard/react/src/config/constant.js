@@ -1,6 +1,6 @@
 // imports from project
 export const BASE_URL = '/dashboard/sales';
-export const BASE_TITLE = ' | DashboardKit React Bootstrap 5 Admin Template';
+export const BASE_TITLE = ' | PantauAir';
 
 export const BUY_NOW = 'https://codedthemes.com/item/dashboardkit-react-admin-template/';
 export const DOCS_LINK = 'https://codedthemes.gitbook.io/dashboardkit-react/';
