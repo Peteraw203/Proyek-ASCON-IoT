@@ -1,19 +1,16 @@
 # Subscriber.py (Versi Laptop/PC - Fixed)
 import paho.mqtt.client as mqtt
-import json  # Gunakan json standar Python PC
+import json  
 import binascii
 import time
 import sys
 
-# Cek keberadaan ascon.py
 try:
     import ascon 
 except ImportError:
     print("Error: File 'ascon.py' tidak ditemukan di folder ini!")
     sys.exit(1)
 
-# --- KONFIGURASI ---
-# ID harus beda dengan ESP32
 MQTT_CLIENT_ID = "pc-subscriber-unique-001" 
 MQTT_BROKER    = "broker.hivemq.com"
 MQTT_USER      = ""

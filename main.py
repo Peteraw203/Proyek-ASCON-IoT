@@ -1,4 +1,3 @@
-# main.py (Versi Auto-Config, Tanpa Tombol Reset)
 import binascii
 import ascon
 import time
@@ -28,7 +27,7 @@ print("Menginisialisasi WiFi...")
 # Logic Baru:
 # get_connection() akan mencoba connect.
 # Jika GAGAL/SALAH PASSWORD, dia otomatis masuk mode AP di dalamnya.
-# Jadi kalau kode ini lanjut ke bawah, BERARTI SUDAH PASTI CONNECT.
+# Jadi kalau kode ini lanjut ke bawah, berarti sudah terkoneksi.
 wifimgr.get_connection()
 
 print("WiFi Terhubung!")
