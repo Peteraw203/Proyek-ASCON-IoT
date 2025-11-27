@@ -7,7 +7,7 @@ import ujson
 from umqtt.simple import MQTTClient
 import wifimgr
 
-# --- KONFIGURASI ---
+# KONFIGURASI 
 MQTT_CLIENT_ID = "esp32-water-890"
 MQTT_USER      = ""
 MQTT_PASSWORD  = ""
@@ -21,18 +21,17 @@ WATER_THRESHOLD = 2200
 sensor_pin = ADC(Pin(34))
 sensor_pin.atten(ADC.ATTN_11DB) 
 
-# --- SETUP WIFI MANAGER ---
+# SETUP WIFI MANAGER 
 print("Menginisialisasi WiFi...")
 
-# Logic Baru:
-# get_connection() akan mencoba connect.
+#connection() akan mencoba connect.
 # Jika GAGAL/SALAH PASSWORD, dia otomatis masuk mode AP di dalamnya.
 # Jadi kalau kode ini lanjut ke bawah, berarti sudah terkoneksi.
 wifimgr.get_connection()
 
 print("WiFi Terhubung!")
 
-# --- SETUP MQTT ---
+#SETUP MQTT 
 print("Menghubungkan ke Broker MQTT...", end="")
 client = None
 try:

@@ -4,10 +4,10 @@ import Chart from 'react-apexcharts';
 import { Ascon } from 'ascon-js';
 import { useMqtt } from 'contexts/MqttContext';
 
-// --- KONFIGURASI MQTT ---
+//KONFIGURASI MQTT 
 const MQTT_TOPIC = 'water-ascon128';
 
-// --- KUNCI ASCON ---
+// KUNCI ASCON 
 const KEY_BYTES = new TextEncoder().encode("asconciphertest1");
 const NONCE_BYTES = new TextEncoder().encode("asconcipher1test");
 const AD_BYTES = new TextEncoder().encode("ASCON");
@@ -29,7 +29,7 @@ export default function DashSales() {
     }
   }, [rawLogs]);
 
-  // --- FUNGSI DEKRIPSI ---
+  // DEKRIPSI 
   const decryptAscon = (hexString) => {
     try {
       if (!hexString) return 0;
