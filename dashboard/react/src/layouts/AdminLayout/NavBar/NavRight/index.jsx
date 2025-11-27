@@ -16,6 +16,8 @@ import { signOut } from 'firebase/auth';
 import { auth } from 'config/firebase';
 import { useAuth } from 'contexts/AuthContext';
 
+import { useMqtt } from 'contexts/MqttContext';
+
 // notifications data
 const notifications = [];
 
@@ -27,6 +29,7 @@ const profile = [];
 export default function NavRight() {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const { connectionStatus } = useMqtt();
 
   const handleLogout = async () => {
     try {
@@ -39,6 +42,13 @@ export default function NavRight() {
 
   return (
     <ListGroup as="ul" bsPrefix=" " className="list-unstyled">
+      <ListGroup.Item as="li" bsPrefix=" " className="pc-h-item">
+        <div className="d-flex align-items-center me-3">
+          <span className={`badge ${connectionStatus === 'Connected' ? 'bg-success' : 'bg-danger'}`}>
+            {connectionStatus}
+          </span>
+        </div>
+      </ListGroup.Item>
       <ListGroup.Item as="li" bsPrefix=" " className="pc-h-item">
         <Dropdown align="end">
           <Dropdown.Toggle as="a" variant="link" className="pc-head-link pc-head-link-text arrow-none me-0 user-name">

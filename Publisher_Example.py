@@ -47,8 +47,17 @@ while True:
   print("temp: "+str(sensor.temperature()))
   print("humi: "+str(sensor.humidity()))
   #enkripsi
+  start_enc = time.ticks_ms()
+  print("Start Encrypt: " + str(start_enc))
+  
   temp_ae = ascon.demo_aead_c(t, sensor.temperature(), k=key, n=nonce, a=associateddata)
   humidity_ae = ascon.demo_aead_c(t, sensor.humidity(), k=key, n=nonce, a=associateddata)
+  
+  end_enc = time.ticks_ms()
+  duration_enc = time.ticks_diff(end_enc, start_enc) / 1000.0 # seconds
+  print("End Encrypt: " + str(end_enc))
+  print("Encryption Duration: " + str(duration_enc) + " s")
+
   #bytes to hex
   temp_hex = binascii.hexlify(temp_ae)
   humidity_hex = binascii.hexlify(humidity_ae)
@@ -56,6 +65,7 @@ while True:
   message = ujson.dumps({
     "temp": temp_hex,
     "humidity": humidity_hex,
+    "enc_time": duration_enc
   })
   print("Terupdate")
   print("Report ke MQTT topic {}: {}".format(MQTT_TOPIC, message))

@@ -3,11 +3,14 @@ import { RouterProvider } from 'react-router-dom';
 import router from 'routes';
 
 import { AuthProvider } from 'contexts/AuthContext';
+import { MqttProvider } from 'contexts/MqttContext';
 
 export default function App() {
   return (
     <AuthProvider>
-      <RouterProvider router={router} />
+      <MqttProvider>
+        <RouterProvider router={router} />
+      </MqttProvider>
     </AuthProvider>
   );
 }

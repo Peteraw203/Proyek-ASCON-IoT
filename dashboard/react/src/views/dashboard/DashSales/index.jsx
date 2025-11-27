@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Card } from 'react-bootstrap';
 import Chart from 'react-apexcharts';
-import mqtt from 'mqtt';
 import { Ascon } from 'ascon-js';
+import { useMqtt } from 'contexts/MqttContext';
 
 // --- KONFIGURASI MQTT ---
-const MQTT_BROKER = 'wss://broker.hivemq.com:8884/mqtt';
 const MQTT_TOPIC = 'water-ascon128';
 
 // --- KUNCI ASCON ---
@@ -15,9 +14,13 @@ const AD_BYTES = new TextEncoder().encode("ASCON");
 
 export default function DashSales() {
   const [currentLevel, setCurrentLevel] = useState(0);
+  const [encTime, setEncTime] = useState(0);
+  const [decTime, setDecTime] = useState(0);
   const [rawLogs, setRawLogs] = useState([]);
   const [historyData, setHistoryData] = useState([]);
+  const [timeHistory, setTimeHistory] = useState([]); // { x: time, y1: enc, y2: dec }
   const terminalContainerRef = useRef(null);
+  const { client } = useMqtt();
 
   // Auto-scroll to bottom of terminal
   useEffect(() => {
@@ -56,14 +59,20 @@ export default function DashSales() {
   };
 
   useEffect(() => {
-    const client = mqtt.connect(MQTT_BROKER);
+    if (!client) return;
 
-    client.on('connect', () => {
-      console.log('Connected to HiveMQ!');
+    if (client.connected) {
       client.subscribe(MQTT_TOPIC);
-    });
+    }
 
-    client.on('message', (topic, message) => {
+    const onConnect = () => {
+      client.subscribe(MQTT_TOPIC);
+    };
+    client.on('connect', onConnect);
+
+    const onMessage = (topic, message) => {
+      if (topic !== MQTT_TOPIC) return;
+
       try {
         const payloadStr = message.toString();
         const jsonData = JSON.parse(payloadStr);
@@ -74,19 +83,38 @@ export default function DashSales() {
 
         setRawLogs(prev => {
           const newLogs = [...prev, newLog];
-          if (newLogs.length > 100) return newLogs.slice(newLogs.length - 100); // Keep last 100 lines
+          if (newLogs.length > 100) return newLogs.slice(newLogs.length - 100);
           return newLogs;
         });
+
+        // Ambil waktu enkripsi dari payload (jika ada)
+        const encryptionDuration = jsonData.enc_time ? parseFloat(jsonData.enc_time) : 0;
+        setEncTime(encryptionDuration);
+
+        // Mulai hitung waktu dekripsi
+        const startDecrypt = performance.now();
 
         // Dekripsi data Hex yang diterima
         const realValue = decryptAscon(jsonData.data);
 
+        const endDecrypt = performance.now();
+        const decryptionDuration = (endDecrypt - startDecrypt) / 1000.0; // convert to seconds
+        setDecTime(decryptionDuration);
+
         setCurrentLevel(realValue);
 
-        // Update History
+        const now = new Date().getTime();
+
+        // Update History Water Level
         setHistoryData(prev => {
-          const newData = [...prev, { x: new Date().getTime(), y: realValue }];
-          // Batasi history agar tidak terlalu berat (misal 50 data terakhir)
+          const newData = [...prev, { x: now, y: realValue }];
+          if (newData.length > 50) return newData.slice(newData.length - 50);
+          return newData;
+        });
+
+        // Update History Waktu Enkripsi/Dekripsi
+        setTimeHistory(prev => {
+          const newData = [...prev, { x: now, enc: encryptionDuration, dec: decryptionDuration }];
           if (newData.length > 50) return newData.slice(newData.length - 50);
           return newData;
         });
@@ -94,67 +122,67 @@ export default function DashSales() {
       } catch (e) {
         console.log("Format pesan salah");
       }
-    });
+    };
+
+    client.on('message', onMessage);
 
     return () => {
-      if (client) client.end();
+      client.off('message', onMessage);
+      client.off('connect', onConnect);
+      if (client.connected) {
+        client.unsubscribe(MQTT_TOPIC);
+      }
     };
-  }, []);
+  }, [client]);
 
   // --- LOGIKA TAMPILAN (WARNA) ---
   const isDanger = currentLevel > 90;
   const cardBgColor = isDanger ? '#f8d7da' : '#d4edda';
   const textColor = isDanger ? '#721c24' : '#155724';
 
-  // --- KONFIGURASI CHART ---
-  const chartOptions = {
+  // --- KONFIGURASI CHART WATER LEVEL ---
+  const waterChartOptions = {
     chart: {
-      id: 'realtime',
+      id: 'water-level',
       type: 'line',
-      animations: {
-        enabled: true,
-        easing: 'linear',
-        dynamicAnimation: {
-          speed: 1000
-        }
-      },
-      toolbar: {
-        show: false
-      },
-      zoom: {
-        enabled: false
-      }
+      animations: { enabled: true, easing: 'linear', dynamicAnimation: { speed: 1000 } },
+      toolbar: { show: false },
+      zoom: { enabled: false }
     },
-    dataLabels: {
-      enabled: false
-    },
-    stroke: {
-      curve: 'smooth'
-    },
-    title: {
-      text: 'Water Level History',
-      align: 'left'
-    },
-    markers: {
-      size: 0
-    },
-    xaxis: {
-      type: 'datetime',
-      range: 20000, // Tampilkan jendela waktu 20 detik terakhir (opsional, sesuaikan)
-    },
-    yaxis: {
-      max: 100,
-      min: 0
-    },
-    legend: {
-      show: false
-    },
+    dataLabels: { enabled: false },
+    stroke: { curve: 'smooth' },
+    title: { text: 'Water Level History', align: 'left' },
+    xaxis: { type: 'datetime', range: 20000 },
+    yaxis: { max: 100, min: 0 },
+    legend: { show: false },
   };
 
-  const chartSeries = [{
-    name: "Water Level",
-    data: historyData
-  }];
+  const waterChartSeries = [{ name: "Water Level", data: historyData }];
+
+  // --- KONFIGURASI CHART WAKTU ---
+  const timeChartOptions = {
+    chart: {
+      id: 'time-metrics',
+      type: 'line',
+      animations: { enabled: true, easing: 'linear', dynamicAnimation: { speed: 1000 } },
+      toolbar: { show: false },
+      zoom: { enabled: false }
+    },
+    dataLabels: { enabled: false },
+    stroke: { curve: 'smooth', width: 2 },
+    title: { text: 'Encryption vs Decryption Time (s)', align: 'left' },
+    xaxis: { type: 'datetime', range: 20000 },
+    yaxis: {
+      labels: { formatter: (val) => val.toFixed(4) }
+    },
+    colors: ['#008FFB', '#00E396'],
+    legend: { show: true, position: 'top' },
+  };
+
+  const timeChartSeries = [
+    { name: "Encryption Time", data: timeHistory.map(d => ({ x: d.x, y: d.enc })) },
+    { name: "Decryption Time", data: timeHistory.map(d => ({ x: d.x, y: d.dec })) }
+  ];
 
   return (
     <Row>
@@ -176,24 +204,14 @@ export default function DashSales() {
               <i className="feather icon-activity me-2"></i>
               Live Water Level
             </h4>
-
-            {/* Angka Besar */}
-            <h1 style={{
-              fontSize: '5rem',
-              fontWeight: 'bold',
-              color: textColor,
-              margin: '0'
-            }}>
+            <h1 style={{ fontSize: '5rem', fontWeight: 'bold', color: textColor, margin: '0' }}>
               {currentLevel}%
             </h1>
-
-            {/* Status Text */}
             <div style={{ marginTop: '15px' }}>
               <span className={`badge ${isDanger ? 'bg-danger' : 'bg-success'}`} style={{ fontSize: '1rem', padding: '10px 20px' }}>
                 {isDanger ? 'BAHAYA: AIR PENUH!' : 'AMAN: LEVEL NORMAL'}
               </span>
             </div>
-
             <small style={{ color: textColor, opacity: 0.8, marginTop: '20px', fontStyle: 'italic' }}>
               Encrypted via ASCON-128
             </small>
@@ -201,7 +219,25 @@ export default function DashSales() {
         </Card>
       </Col>
 
-      {/* --- RAW DATA & CHART --- */}
+      {/* --- METRICS CARDS --- */}
+      <Col md={6} xl={6}>
+        <Card>
+          <Card.Body className="text-center">
+            <h6 className="mb-4">Encryption Time (ESP32)</h6>
+            <h3 className="mb-0 text-primary">{encTime.toFixed(4)} s</h3>
+          </Card.Body>
+        </Card>
+      </Col>
+      <Col md={6} xl={6}>
+        <Card>
+          <Card.Body className="text-center">
+            <h6 className="mb-4">Decryption Time (Browser)</h6>
+            <h3 className="mb-0 text-success">{decTime.toFixed(4)} s</h3>
+          </Card.Body>
+        </Card>
+      </Col>
+
+      {/* --- RAW DATA & CHARTS --- */}
       <Col md={12} xl={12}>
         <Row>
           {/* RAW DATA TERMINAL */}
@@ -237,18 +273,24 @@ export default function DashSales() {
             </Card>
           </Col>
 
-          {/* HISTORY CHART */}
+          {/* CHARTS */}
           <Col md={12} xl={8}>
-            <Card>
-              <Card.Body>
-                <Chart
-                  options={chartOptions}
-                  series={chartSeries}
-                  type="line"
-                  height={350}
-                />
-              </Card.Body>
-            </Card>
+            <Row>
+              <Col md={12}>
+                <Card>
+                  <Card.Body>
+                    <Chart options={waterChartOptions} series={waterChartSeries} type="line" height={250} />
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col md={12}>
+                <Card>
+                  <Card.Body>
+                    <Chart options={timeChartOptions} series={timeChartSeries} type="line" height={250} />
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Col>
