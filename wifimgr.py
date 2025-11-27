@@ -10,7 +10,6 @@ AP_SSID = "ESP32-Config"
 AP_PASSWORD = "" 
 CONFIG_FILE = 'wifi.dat'
 
-# --- FUNGSI DECODE URL (PENTING UNTUK SPASI) ---
 def unquote(string):
     if not string: return ""
     string = string.replace('+', ' ')
