@@ -15,7 +15,7 @@ MQTT_CLIENT_ID = "pc-subscriber-unique-001"
 MQTT_BROKER    = "broker.hivemq.com"
 MQTT_USER      = ""
 MQTT_PASSWORD  = ""
-MQTT_TOPIC     = "water-ascon128" # Samakan dengan Publisher
+MQTT_TOPIC     = "water-ascon128" 
 
 # Key & Nonce (Harus sama persis dengan ESP32)
 key   = "asconciphertest1".encode('utf-8')
