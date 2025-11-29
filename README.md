@@ -60,7 +60,7 @@ Dashboard digunakan untuk memantau data sensor secara *real-time*.
 3. Jalankan server development:
 
    ```bash
-   npm run dev
+   npm start
    ```
 4. Buka browser dan akses `http://localhost:5173`.
 
