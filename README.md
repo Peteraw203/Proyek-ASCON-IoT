@@ -85,6 +85,12 @@ Data yang dikirim dari ESP32 tidak berupa *plaintext*, melainkan *ciphertext* ya
 
 Silakan lakukan *Fork* dan *Pull Request* jika ingin menambahkan fitur baru atau memperbaiki *bug*.
 
+## Dibuat Oleh: 
+##### Daffa Fawwaz Garibaldi	/	235150307111011
+##### Gilang Shido Faizalhaq	/	235150300111011
+##### Peter Abednego Wijaya	/	235150300111013
+##### Muhfi Fawwaz Rizqullah	/	235150307111009
+
 ## 📄 Lisensi
 
 Proyek ini dilisensikan di bawah [MIT License](./LICENSE).
